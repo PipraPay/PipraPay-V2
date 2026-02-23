@@ -550,7 +550,7 @@
     <div class="footer">
       <div class="row justify-content-between align-items-center">
         <div class="col">
-          <p class="fs-6 mb-0">&copy; PipraPay. <span class="d-none d-sm-inline-block">2025 QubePlug Bangladesh. <strong><?php echo $global_version['version'];?></strong></span></p>
+          <p class="fs-6 mb-0">&copy; PipraPay. <span class="d-none d-sm-inline-block">2026 <a href="https://qubeplug.cloud/" target="blank" class="text-bold text-secondary">QubePlug</a> <strong><?php echo $global_version['version'];?></strong></span></p>
         </div>
         <div class="col-auto">
           <div class="d-flex justify-content-end">
