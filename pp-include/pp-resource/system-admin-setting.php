@@ -322,7 +322,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_newpassword", "currentpassword": currentpassword, "newPassword": newPassword, "confirmpassword": confirmpassword},
                     success: function (data) {
                         document.querySelector(".btn-savenewpassword").innerHTML = 'Save changes';
@@ -346,7 +346,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_basicemail", "email": basicemail},
                     success: function (data) {
                         document.querySelector(".btn-savebasicemail").innerHTML = 'Save changes';
@@ -371,7 +371,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_basicinfo", "fullname": fullname , "username": username },
                     success: function (data) {
                         document.querySelector(".btn-savebasicinfo").innerHTML = 'Save changes';

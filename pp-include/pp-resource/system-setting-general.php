@@ -562,7 +562,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_savesupport_contact", "support_contact_phone_mobile": support_contact_phone_mobile, "support_contact_email_addrss": support_contact_email_addrss, "support_contact_support_website": support_contact_support_website, "support_contact_facebok_page": support_contact_facebok_page, "support_contact_messenger": support_contact_messenger, "support_contact_whatsapp": support_contact_whatsapp, "support_contact_telegram": support_contact_telegram, "support_contact_youtube": support_contact_youtube},
                     success: function (data) {
                         document.querySelector(".btn-support_contact").innerHTML = 'Save changes';
@@ -594,7 +594,7 @@
             
                     $.ajax({
                         type: "POST",
-                        url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                        url: "<?php echo PP_URL; ?>/admin/dashboard",
                         data: formData,
                         processData: false,
                         contentType: false,
@@ -663,7 +663,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_savebusiness_details", "business_details_street_address": business_details_street_address, "business_details_city_town": business_details_city_town, "business_details_postal_code": business_details_postal_code, "business_details_country": business_details_country},
                     success: function (data) {
                         document.querySelector(".btn-business_details").innerHTML = 'Save changes';
@@ -685,7 +685,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_resetcolorscheme"},
                     success: function (data) {
                         document.querySelector(".btn-pp_resetcolorscheme").innerHTML = 'Reset';
@@ -717,7 +717,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_savecolorscheme", "global_text_color": global_text_color, "primary_button_color": primary_button_color, "button_text_color": button_text_color, "button_hover_color": button_hover_color, "button_hover_text_color": button_hover_text_color, "navigation_background": navigation_background, "navigation_text_color": navigation_text_color, "active_tab_color": active_tab_color, "active_tab_text_color": active_tab_text_color},
                     success: function (data) {
                         document.querySelector(".btn-pp_savecolorscheme").innerHTML = 'Save changes';
@@ -745,7 +745,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_systembasicinfo", "sitename": sitename , "default_timezone": default_timezone, "default_currency": default_currency , "currency_symbol": currency_symbol, "currency_rate": currency_rate },
                     success: function (data) {
                         document.querySelector(".btn-savebasicinfo").innerHTML = 'Save changes';

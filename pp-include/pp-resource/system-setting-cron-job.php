@@ -67,7 +67,7 @@
                       <div class="col-sm-12">
                             <label for="sitename" class="col-sm-12 col-form-label form-label">Cron Job Command</label>
                             <div class="input-group">
-                                 <input type="text" class="form-control" name="cron-job-command" id="cron-job-command" placeholder="Enter cron job command" aria-label="Enter cron job command" value="curl -s https://<?php echo $_SERVER['HTTP_HOST']?>/?cron >/dev/null 2>&1" readonly>
+                                 <input type="text" class="form-control" name="cron-job-command" id="cron-job-command" placeholder="Enter cron job command" aria-label="Enter cron job command" value="curl -s <?php echo PP_URL; ?>/?cron >/dev/null 2>&1" readonly>
                                  <span class="input-group-text" style="cursor:pointer" onclick="copyToClipboard('cron-job-command')"><i class="bi bi-clipboard"></i></span>
                             </div>
                             <div class="text-secondary mt-2">Set to run every 10 minutes</div>

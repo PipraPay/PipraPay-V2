@@ -32,7 +32,7 @@
     }else{
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/install/";
+            location.href="../install/";
         </script>
 <?php
         exit();
@@ -101,7 +101,7 @@
             insertData($db_prefix.'transaction', $columns, $values);
         
             http_response_code(200); 
-            echo json_encode(["status" => true, "pp_id" => $pp_id, "pp_url" => "https://".$_SERVER['HTTP_HOST']."/payment/".$pp_id]);
+            echo json_encode(["status" => true, "pp_id" => $pp_id, "pp_url" => PP_URL . "/payment/".$pp_id]);
         }
         
         if($endpoint_type == "verify-payments"){

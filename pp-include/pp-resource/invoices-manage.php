@@ -369,13 +369,13 @@
                         if (!navigator.clipboard) {
                             // Fallback for older browsers
                             const textarea = document.createElement("textarea");
-                            textarea.value = 'https://<?php echo $_SERVER['HTTP_HOST']?>/invoice/'+text;
+                            textarea.value = '<?php echo PP_URL; ?>/invoice/'+text;
                             document.body.appendChild(textarea);
                             textarea.select();
                             document.execCommand("copy");
                             document.body.removeChild(textarea);
                         } else {
-                            navigator.clipboard.writeText('https://<?php echo $_SERVER['HTTP_HOST']?>/invoice/'+text).then(function() {
+                            navigator.clipboard.writeText('<?php echo PP_URL; ?>/invoice/'+text).then(function() {
                                 document.querySelector(".btn-copy-topclip-board"+text).innerHTML = '<i class="bi-clipboard-check me-1"></i> Copied';
                             });
                         }
@@ -414,7 +414,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_addcustomer", "c_name": c_name, "c_email_mobile": c_email_mobile},
                     success: function (data) {
                         document.querySelector(".btn-model-currency-rate-saved").innerHTML = 'Add New';

@@ -32,7 +32,7 @@
     }else{
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/install/";
+            location.href="../install/";
         </script>
 <?php
         exit();
@@ -86,7 +86,7 @@
                     $invoiceid = $metadata['invoiceid'] ?? '';
                     
                 
-                    $url = 'https://'.$_SERVER['HTTP_HOST'].'/api/verify-payments';
+                    $url = PP_URL . '/api/verify-payments';
                     $apiKey = $setting['response'][0]['api_key'];
                     $data = [
                         'pp_id' => $pp_id

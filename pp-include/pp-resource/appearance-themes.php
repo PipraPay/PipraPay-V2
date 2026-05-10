@@ -185,7 +185,7 @@
                                                             <div class="card-body">
                                                                 <div class="d-flex align-items-start mb-3">
                                                                     <div class="plugin-icon bg-primary bg-opacity-10 text-primary me-3">
-                                                                        <img src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-content/themes/<?php echo $mainFolder.'/'.$themeFolder?>/assets/icon.png" alt="Image Description">
+                                                                        <img src="<?php echo PP_URL; ?>/pp-content/themes/<?php echo $mainFolder.'/'.$themeFolder?>/assets/icon.png" alt="Image Description">
                                                                     </div>
                                                                     <div class="flex-grow-1">
                                                                         <h5 class="mb-1"><?php echo htmlspecialchars($themeInfo['Theme Name'] ?? '')?></h5>
@@ -372,7 +372,7 @@
             $.ajax
             ({
                 type: "POST",
-                url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/appearance-themes",
+                url: "<?php echo PP_URL; ?>/admin/appearance-themes",
                 data: { "action": "pp_appearance_themes_manager", "type": type, "mainfolder": mainfolder, "themesfolder": themesfolder},
                 success: function (data) {
                     console.log(data);

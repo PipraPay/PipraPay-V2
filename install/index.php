@@ -1,8 +1,17 @@
 <?php
+    // Detect the protocol (http vs https)
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+    // Detect the directory part of the script
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $currentDir = str_replace('/install/index.php', '', $scriptName);
+    $currentDir = rtrim($currentDir, '/');
+    $pp_url = $protocol . $host . $currentDir;
+
     if (file_exists(__DIR__."/../pp-config.php")) {
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>";
+            location.href="../";
         </script>
 <?php
         exit();
@@ -208,7 +217,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
-    <link href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/style-install.css" rel="stylesheet">
+    <link href="<?php echo $pp_url; ?>/pp-external/assets/style-install.css" rel="stylesheet">
 </head>
 <body>
     <div class="installer-container">
@@ -459,7 +468,7 @@
                         <div class="card-body">
                             <div class="summary-item">
                                 <span class="summary-item-label">Admin URL:</span>
-                                <span>https://<?php echo $_SERVER['HTTP_HOST']?>/admin/</span>
+                                <span><?php echo $pp_url; ?>/admin/</span>
                             </div>
                             <div class="summary-item">
                                 <span class="summary-item-label">Database Tables Created:</span>
@@ -481,7 +490,7 @@
                         <strong>Important:</strong> For security reasons, please delete the <code>/install</code> directory.
                     </div>
                     
-                    <a href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/" class="btn btn-primary btn-lg">
+                    <a href="<?php echo $pp_url; ?>/admin/" class="btn btn-primary btn-lg">
                         <i class="fa fa-rocket me-2"></i> Launch Application
                     </a>
                 </div>
@@ -496,7 +505,7 @@
             <?php
                 if($is_requirment_fill == false){
             ?>
-                    <button class="btn btn-warning" onclick="location.href='https://<?php echo $_SERVER['HTTP_HOST']?>/install/'">
+                    <button class="btn btn-warning" onclick="location.href='<?php echo $pp_url; ?>/install/'">
                         Check Again <i class="fa fa-refresh ms-2"></i>
                     </button>
             <?php
@@ -530,7 +539,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/install/",
+                    url: "<?php echo $pp_url; ?>/install/",
                     data: { "test": "test", "datahost": datahost, "dataport": dataport, "dbName": dbName, "dbPrefix": dbPrefix, "dbUser": dbUser, "dbPass": dbPass },
                     success: function (data) {
                         document.querySelector("#testBtn").innerHTML = 'Test <i class="fa fa-refresh ms-2"></i>';
@@ -711,7 +720,7 @@
                                 $.ajax
                                 ({
                                     type: "POST",
-                                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/install/",
+                                    url: "<?php echo $pp_url; ?>/install/",
                                     data: { "install": "start", "datahost": datahost, "dataport": dataport, "dbName": dbName, "dbPrefix": dbPrefix, "dbUser": dbUser, "dbPass": dbPass, "adminName": adminName, "adminEmail": adminEmail, "adminUser": adminUser, "adminPass": adminPass },
                                     success: function (data) {
                                         document.querySelector("#nextBtn").innerHTML = 'Next <i class="fa fa-arrow-right ms-2"></i>';
@@ -738,7 +747,7 @@
                         }
                     }
                 } else {
-                    location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/";
+                    location.href="<?php echo $pp_url; ?>/admin/";
                 }
             });
             

@@ -256,7 +256,7 @@
 
                     <label for="sitename" class="col-sm-12 col-form-label form-label">Webhook URL</label>
                     <div class="input-group">
-                         <input type="text" class="form-control" name="webhook-url" id="webhook-url" placeholder="Enter webhook url" aria-label="Enter webhook url" value="https://<?php echo $_SERVER['HTTP_HOST']?>/?webhook=<?php if($global_setting_response['response'][0]['webhook'] !== "--"){echo $global_setting_response['response'][0]['webhook'];}?>" readonly>
+                         <input type="text" class="form-control" name="webhook-url" id="webhook-url" placeholder="Enter webhook url" aria-label="Enter webhook url" value="<?php echo PP_URL; ?>/?webhook=<?php if($global_setting_response['response'][0]['webhook'] !== "--"){echo $global_setting_response['response'][0]['webhook'];}?>" readonly>
                          <span class="input-group-text" style="cursor:pointer" onclick="copyToClipboard('webhook-url')"><i class="bi bi-clipboard"></i></span>
                          <span class="input-group-text btn-arrow-repeat" style="cursor:pointer" onclick="generateapi()"><i class="bi bi-arrow-repeat"></i></span>
                     </div>
@@ -273,7 +273,7 @@
             
                 // Create hidden link
                 const link = document.createElement('a');
-                link.href = 'https://<?php echo $_SERVER['HTTP_HOST']?>/admin/sms-data?download=' + encodeURIComponent(fileName);
+                link.href = '<?php echo PP_URL; ?>/admin/sms-data?download=' + encodeURIComponent(fileName);
                 link.download = fileName;
             
                 // Start download
@@ -308,14 +308,14 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "action": "pp_generate_webhook"},
                     success: function (data) {
                         document.querySelector(".btn-arrow-repeat").innerHTML = '<i class="bi bi-arrow-repeat"></i>';
                         
                         var dedata = JSON.parse(data);
                         
-                        document.querySelector("#webhook-url").value = 'https://<?php echo $_SERVER['HTTP_HOST']?>/?webhook='+dedata.api;
+                        document.querySelector("#webhook-url").value = '<?php echo PP_URL; ?>/?webhook='+dedata.api;
                     }
                 });
             }
@@ -380,8 +380,8 @@
                         <tr class="odd">
                             <td valign="top" colspan="10" class="dataTables_empty">
                                 <div class="text-center p-4">
-                                      <img class="mb-3" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-                                      <img class="mb-3" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
+                                      <img class="mb-3" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+                                      <img class="mb-3" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
                                       <p class="mb-0">No data to show</p>
                                 </div>
                             </td>

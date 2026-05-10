@@ -1,0 +1,18 @@
+# PipraPay V2 Git Ignore
+
+# Configuration
+pp-config.php
+maintenance.lock
+
+# Temp & Cache
+temp_upload_*/
+*.log
+*.tmp
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

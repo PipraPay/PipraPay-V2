@@ -247,13 +247,13 @@
                         if (!navigator.clipboard) {
                             // Fallback for older browsers
                             const textarea = document.createElement("textarea");
-                            textarea.value = 'https://<?php echo $_SERVER['HTTP_HOST']?>/payment-link/'+text;
+                            textarea.value = '<?php echo PP_URL; ?>/payment-link/'+text;
                             document.body.appendChild(textarea);
                             textarea.select();
                             document.execCommand("copy");
                             document.body.removeChild(textarea);
                         } else {
-                            navigator.clipboard.writeText('https://<?php echo $_SERVER['HTTP_HOST']?>/payment-link/'+text).then(function() {
+                            navigator.clipboard.writeText('<?php echo PP_URL; ?>/payment-link/'+text).then(function() {
                                 document.querySelector(".btn-copy-topclip-board"+text).innerHTML = '<i class="bi-clipboard-check me-1"></i> Copied';
                             });
                         }

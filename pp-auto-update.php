@@ -27,7 +27,7 @@
                 if($global_user_login == false){
 ?>
                     <script>
-                        location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/login";
+                        location.href="<?php echo PP_URL; ?>/admin/login";
                     </script>
 <?php
                     exit();
@@ -37,7 +37,7 @@
     }else{
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/install/";
+            location.href="./install/";
         </script>
 <?php
         exit();
@@ -190,7 +190,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
-    <link href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/style-auto-update.css?v=1" rel="stylesheet">
+    <link href="<?php echo PP_URL; ?>/pp-external/assets/style-auto-update.css?v=1" rel="stylesheet">
 </head>
 <body>
     <div class="d-flex align-items-center justify-content-center h-100 p-3">
@@ -319,7 +319,7 @@
             $.ajax
             ({
                 type: "POST",
-                url: "https://<?php echo $_SERVER['HTTP_HOST']?>/pp-auto-update",
+                url: "<?php echo PP_URL; ?>/pp-auto-update",
                 data: { "auto-update": "start" },
                 success: function (data) {
                     document.querySelector(".btn-update").innerHTML = '<i class="fa fa-download me-2"></i> Prepare for Update';

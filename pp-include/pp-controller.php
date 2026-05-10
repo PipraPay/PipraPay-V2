@@ -1,6 +1,16 @@
 <?php
     define('pp_allowed_access', true);
 
+    // Detect the protocol (http vs https)
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+    // Detect the directory part of the script, handling different entry points
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $currentDir = str_replace(['/index.php', '/admin/index.php', '/install/index.php', '/payment/index.php', '/api/index.php', '/invoice/index.php', '/payment-link/index.php'], '', $scriptName);
+    $currentDir = rtrim($currentDir, '/');
+    define('PP_URL', $protocol . $host . $currentDir);
+
+
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
 
@@ -973,7 +983,7 @@ function convertDateTime($datetime, $daysToSubtract = 0, $newHour = null, $newMi
 
 
     function pp_get_site_url(){
-        return 'https://'.$_SERVER['HTTP_HOST'];
+        return PP_URL;
     }
 
     function pp_get_settings() {
@@ -1193,7 +1203,7 @@ function convertDateTime($datetime, $daysToSubtract = 0, $newHour = null, $newMi
             
             $transaction_slip = json_decode(uploadImage($payment_slip_file, $max_file_size), true);
             if($transaction_slip['status'] == true){
-                $transaction_slip = 'https://'.$_SERVER['HTTP_HOST'].'/pp-external/media/'.$transaction_slip['file'];
+                $transaction_slip = PP_URL . '/pp-external/media/'.$transaction_slip['file'];
              
                 $columns = ['payment_method_id', 'payment_method', 'payment_verify_way', 'payment_verify_id', 'transaction_status', 'transaction_amount', 'transaction_fee', 'transaction_currency'];
                 $values = [$payment_method_id, $payment_method, 'slip', $transaction_slip, $status, $transaction_amount, $transaction_fee, $transaction_currency];
@@ -1260,7 +1270,7 @@ function convertDateTime($datetime, $daysToSubtract = 0, $newHour = null, $newMi
         $invoice = pp_get_invoice($invoice_id);
         
         if($invoice['status'] == true){
-            return 'https://'.$_SERVER['HTTP_HOST'].'/invoice/'.$invoice_id;
+            return PP_URL . '/invoice/'.$invoice_id;
         }else{
             return false;
         }
@@ -1270,7 +1280,7 @@ function convertDateTime($datetime, $daysToSubtract = 0, $newHour = null, $newMi
         $payment = pp_get_transation($pp_id);
         
         if($payment['status'] == true){
-            return 'https://'.$_SERVER['HTTP_HOST'].'/payment/'.$pp_id;
+            return PP_URL . '/payment/'.$pp_id;
         }else{
             return false;
         }
@@ -1362,7 +1372,7 @@ function convertDateTime($datetime, $daysToSubtract = 0, $newHour = null, $newMi
                                     $data[] = [
                                         'plugin_name' => $plugin_setting['display_name'],
                                         'plugin_slug' => $plugins['plugin_slug'],
-                                        'plugin_logo' => 'https://'.$_SERVER['HTTP_HOST'].'/pp-content/plugins/'.$plugins['plugin_dir'].'/'.$plugins['plugin_slug'].'/assets/icon.png'
+                                        'plugin_logo' => PP_URL . '/pp-content/plugins/'.$plugins['plugin_dir'].'/'.$plugins['plugin_slug'].'/assets/icon.png'
                                     ];
                                 }
                             }

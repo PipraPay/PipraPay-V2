@@ -288,13 +288,13 @@ if (file_exists(__DIR__."/pp-config.php")) {
                 if ($global_user_login == true) {
                     ?>
                     <script>
-                        location.href = "https://<?php echo $_SERVER['HTTP_HOST'] ?>/admin/dashboard";
+                        location.href = "admin/dashboard";
                     </script>
                     <?php
                 } else {
                     ?>
                     <script>
-                        location.href = "https://<?php echo $_SERVER['HTTP_HOST'] ?>/admin/login";
+                        location.href = "admin/login";
                     </script>
                     <?php
                 }
@@ -304,7 +304,7 @@ if (file_exists(__DIR__."/pp-config.php")) {
 } else {
     ?>
     <script>
-        location.href = "https://<?php echo $_SERVER['HTTP_HOST'] ?>/install/";
+        location.href = "install/";
     </script>
     <?php
 }

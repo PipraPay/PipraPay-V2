@@ -32,7 +32,7 @@
     }else{
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/install/";
+            location.href="../install/";
         </script>
 <?php
         exit();

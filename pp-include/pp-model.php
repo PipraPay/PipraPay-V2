@@ -24,7 +24,7 @@
         logoutCookie();
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/login";
+            location.href="<?php echo PP_URL; ?>/admin/login";
         </script>
 <?php
         exit();
@@ -749,7 +749,7 @@
                     
                     $branding_favicon = json_decode(uploadImage($_FILES['branding_favicon']?? null, $max_file_size), true);
                     if($branding_favicon['status'] == true){
-                         $branding_favicon = 'https://'.$_SERVER['HTTP_HOST'].'/pp-external/media/'.$branding_favicon['file'];
+                         $branding_favicon = PP_URL . '/pp-external/media/'.$branding_favicon['file'];
                          
                          deleteImage($global_setting_response['response'][0]['favicon']);
                     }else{
@@ -758,7 +758,7 @@
                     
                     $branding_logo = json_decode(uploadImage($_FILES['branding_logo']?? null, $max_file_size), true);
                     if($branding_logo['status'] == true){
-                         $branding_logo = 'https://'.$_SERVER['HTTP_HOST'].'/pp-external/media/'.$branding_logo['file'];
+                         $branding_logo = PP_URL . '/pp-external/media/'.$branding_logo['file'];
                          
                          deleteImage($global_setting_response['response'][0]['logo']);
                     }else{
@@ -1599,7 +1599,7 @@
                     $pp_transaction[] = [
                       "id" => $row["id"],
                       "pl_id" =>$row['pl_id'],
-                      "pl_link" =>'https://'.$_SERVER['HTTP_HOST'].'/payment-link/'.$row['pl_id'],
+                      "pl_link" =>PP_URL . '/payment-link/'.$row['pl_id'],
                       "pl_name" => $row["pl_name"],
                       "pl_quantity" => $row["pl_quantity"],
                       "pl_description" => $row["pl_description"],
@@ -1854,7 +1854,7 @@
                       "i_note" => $row["i_note"],
                       "amount" => number_format($totalAmount, 2).' '.$row["i_currency"],
                       "i_amount_shipping" => number_format($row["i_amount_shipping"], 2).' '.$row["i_currency"],
-                      "i_link" => 'https://'.$_SERVER['HTTP_HOST'].'/invoice/'.$row['i_id'],
+                      "i_link" => PP_URL . '/invoice/'.$row['i_id'],
                       "created_at" => $row["created_at"],
                     ];
                 }
@@ -2297,7 +2297,7 @@
                                     $upload = json_decode(uploadImage($single_file, 10 * 1024 * 1024), true);
                     
                                     if ($upload['status'] === true) {
-                                        $file_url = 'https://' . $_SERVER['HTTP_HOST'] . '/pp-external/media/' . $upload['file'];
+                                        $file_url = PP_URL . '/pp-external/media/' . $upload['file'];
                                         $meta[$key][] = $file_url;
                                     } else {
                                         $meta[$key][] = 'upload_failed';
@@ -2310,7 +2310,7 @@
                                 $upload = json_decode(uploadImage($file, 10 * 1024 * 1024), true);
                     
                                 if ($upload['status'] === true) {
-                                    $file_url = 'https://' . $_SERVER['HTTP_HOST'] . '/pp-external/media/' . $upload['file'];
+                                    $file_url = PP_URL . '/pp-external/media/' . $upload['file'];
                                     $meta[$key] = $file_url;
                                 } else {
                                     $meta[$key] = 'upload_failed';
@@ -2319,7 +2319,7 @@
                         }
                     }
     
-                    $baseURL = 'https://'.$_SERVER['HTTP_HOST'].'/api/create-charge';
+                    $baseURL = PP_URL . '/api/create-charge';
                     
                     $payload = [
                         'full_name'         => $full_name,
@@ -2330,7 +2330,7 @@
                             'paymentid'   => $paymentid
                         ],
                         'redirect_url'      => '--',
-                        'cancel_url'        => 'https://'.$_SERVER['HTTP_HOST'].'/payment-link/'.$paymentid,
+                        'cancel_url'        => PP_URL . '/payment-link/'.$paymentid,
                         'webhook_url'       => '--',
                         'return_type'       => 'POST',
                         'product_name'      => $response_transaction_checker['response'][0]['pl_name'],
@@ -2394,7 +2394,7 @@
                     $total_amount = $subtotal - $total_discount + $total_vat + $shipping_cost;
                     $currency = $invoice_details['response'][0]['i_currency'];
 
-                    $baseURL = 'https://'.$_SERVER['HTTP_HOST'].'/api/create-charge';
+                    $baseURL = PP_URL . '/api/create-charge';
                     
                     $payload = [
                         'full_name'         => $invoice_details['response'][0]['c_name'],
@@ -2404,9 +2404,9 @@
                         'metadata'          => [
                             'invoiceid'   => $invoiceid
                         ],
-                        'redirect_url'      => 'https://'.$_SERVER['HTTP_HOST'].'/invoice/'.$invoiceid,
-                        'cancel_url'        => 'https://'.$_SERVER['HTTP_HOST'].'/invoice/'.$invoiceid,
-                        'webhook_url'       => 'https://'.$_SERVER['HTTP_HOST'].'/invoice/'.$invoiceid,
+                        'redirect_url'      => PP_URL . '/invoice/'.$invoiceid,
+                        'cancel_url'        => PP_URL . '/invoice/'.$invoiceid,
+                        'webhook_url'       => PP_URL . '/invoice/'.$invoiceid,
                         'return_type'       => 'POST'
                     ];
                     

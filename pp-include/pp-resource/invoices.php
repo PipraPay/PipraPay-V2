@@ -306,8 +306,8 @@
                         <tr class="odd">
                             <td valign="top" colspan="6" class="dataTables_empty">
                                 <div class="text-center p-4">
-                                      <img class="mb-3" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-                                      <img class="mb-3" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
+                                      <img class="mb-3" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+                                      <img class="mb-3" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
                                       <p class="mb-0">No data to show</p>
                                 </div>
                             </td>
@@ -449,13 +449,13 @@
                 if (!navigator.clipboard) {
                     // Fallback for older browsers
                     const textarea = document.createElement("textarea");
-                    textarea.value = 'https://<?php echo $_SERVER['HTTP_HOST']?>/invoice/'+text;
+                    textarea.value = '<?php echo PP_URL; ?>/invoice/'+text;
                     document.body.appendChild(textarea);
                     textarea.select();
                     document.execCommand("copy");
                     document.body.removeChild(textarea);
                 } else {
-                    navigator.clipboard.writeText('https://<?php echo $_SERVER['HTTP_HOST']?>/invoice/'+text).then(function() {
+                    navigator.clipboard.writeText('<?php echo PP_URL; ?>/invoice/'+text).then(function() {
                         document.querySelector(".btn-copy-topclip-board"+text).innerHTML = '<i class="bi-clipboard-check me-1"></i> Copied';
                     });
                 }

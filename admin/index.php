@@ -32,7 +32,7 @@
             if($global_user_login == false){
 ?>
                 <script>
-                    location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/login";
+                    location.href="login";
                 </script>
 <?php
                 exit();
@@ -41,7 +41,7 @@
     }else{
 ?>
         <script>
-            location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/install/";
+            location.href="../install/";
         </script>
 <?php
         exit();
@@ -75,12 +75,12 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/vendor.min.css">
+  <link rel="stylesheet" href="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/vendor.min.css">
 
-  <link rel="stylesheet" href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme.minc619.css?v=1.3">
+  <link rel="stylesheet" href="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme.minc619.css?v=1.3">
 
-  <link rel="preload" href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme.min.css?v=1.4" data-hs-appearance="default" as="style">
-  <link rel="preload" href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+  <link rel="preload" href="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme.min.css?v=1.4" data-hs-appearance="default" as="style">
+  <link rel="preload" href="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
 
   <style data-hs-appearance-onload-styles>
     *
@@ -106,7 +106,7 @@
   </style>
   
   <script>
-    window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"/javascript:void(0)","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#3BB77E","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/hs.theme-appearance.js","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/hs.theme-appearance-charts.js","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/demo.js"],"build":["https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme.css","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/demo.js","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme-dark.html","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/docs.css","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/vendor/icon-set/style.html","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/hs.theme-appearance.js","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/hs.theme-appearance-charts.js","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/demo.js"]},"minifyCSSFiles":["https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme.css","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css/theme-dark.css"],"copyDependencies":{"dist":{"*assets/js/theme-custom.js":""},"build":{"*assets/js/theme-custom.js":"","https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/node_modules/bootstrap-icons/font/*fonts/**":"https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"./src","dist":"./dist","build":"./build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
+    window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"/javascript:void(0)","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#3BB77E","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/hs.theme-appearance.js","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/hs.theme-appearance-charts.js","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/demo.js"],"build":["<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme.css","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/demo.js","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme-dark.html","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/docs.css","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/vendor/icon-set/style.html","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/hs.theme-appearance.js","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/hs.theme-appearance-charts.js","<?php echo PP_URL; ?>/pp-external/assets/admin/node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/demo.js"]},"minifyCSSFiles":["<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme.css","<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css/theme-dark.css"],"copyDependencies":{"dist":{"*assets/js/theme-custom.js":""},"build":{"*assets/js/theme-custom.js":"","<?php echo PP_URL; ?>/pp-external/assets/admin/node_modules/bootstrap-icons/font/*fonts/**":"<?php echo PP_URL; ?>/pp-external/assets/admin/assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"./src","dist":"./dist","build":"./build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
     window.hs_config.gulpRGBA = (p1) => {
     const options = p1.split(',')
     const hex = options[0].toString()
@@ -195,9 +195,9 @@
       <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/hs.theme-appearance.js"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/hs.theme-appearance.js"></script>
 
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
 
   <!-- ========== HEADER ========== -->
 
@@ -523,13 +523,13 @@
             <li class="navbar-vertical-footer-list-item">
               <div class="dropdown dropup">
                 <button type="button" class="btn btn-ghost-secondary btn-icon rounded-circle" id="selectLanguageDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-dropdown-animation>
-                  <img class="avatar avatar-xss avatar-circle" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/vendor/flag-icon-css/flags/1x1/us.svg" alt="United States Flag">
+                  <img class="avatar avatar-xss avatar-circle" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/vendor/flag-icon-css/flags/1x1/us.svg" alt="United States Flag">
                 </button>
 
                 <div class="dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="selectLanguageDropdown">
                   <span class="dropdown-header">Select language</span>
                   <a class="dropdown-item" href="#">
-                    <img class="avatar avatar-xss avatar-circle me-2" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/vendor/flag-icon-css/flags/1x1/us.svg" alt="Flag">
+                    <img class="avatar avatar-xss avatar-circle me-2" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/vendor/flag-icon-css/flags/1x1/us.svg" alt="Flag">
                     <span class="text-truncate" title="English">English (US)</span>
                   </a>
                 </div>
@@ -598,15 +598,15 @@
     </div>
   </div>
 
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/demo.js?v=1.8"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/demo.js?v=1.8"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/vendor.min.js"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/vendor.min.js"></script>
 
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
 
   <!-- JS Front -->
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/theme.min.js"></script>
-  <script src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/js/hs.theme-appearance-charts.js"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/theme.min.js"></script>
+  <script src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/js/hs.theme-appearance-charts.js"></script>
 
   <script>
         document.querySelector(".btn-add-themes-plugins").addEventListener("click", function () {
@@ -729,7 +729,7 @@
                 }
             }, 100);
         
-            fetch('https://<?php echo $_SERVER['HTTP_HOST']?>/admin/' + url, {
+            fetch('<?php echo PP_URL; ?>/admin/' + url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

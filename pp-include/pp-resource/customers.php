@@ -259,8 +259,8 @@
                     <tr class="odd">
                         <td valign="top" colspan="5" class="dataTables_empty">
                             <div class="text-center p-4">
-                                  <img class="mb-3" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-                                  <img class="mb-3" src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/admin/assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
+                                  <img class="mb-3" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+                                  <img class="mb-3" src="<?php echo PP_URL; ?>/pp-external/assets/admin/assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
                                   <p class="mb-0">No data to show</p>
                             </div>
                         </td>
@@ -371,7 +371,7 @@
             $.ajax
             ({
                 type: "POST",
-                url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                url: "<?php echo PP_URL; ?>/admin/dashboard",
                 data: { "action": "pp_addcustomer", "c_name": c_name, "c_email_mobile": c_email_mobile},
                 success: function (data) {
                     document.querySelector(".btn-model-currency-rate-saved").innerHTML = 'Add New';
@@ -400,7 +400,7 @@
             $.ajax
             ({
                 type: "POST",
-                url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                url: "<?php echo PP_URL; ?>/admin/dashboard",
                 data: { "action": "pp_editcustomer", "id": modelid, "c_name": c_name, "c_email_mobile": c_email_mobile, "status": status},
                 success: function (data) {
                     document.querySelector(".btn-model-currency-rate-saved"+modelid).innerHTML = 'Add New';

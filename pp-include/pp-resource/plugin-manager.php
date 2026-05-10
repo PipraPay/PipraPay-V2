@@ -190,7 +190,7 @@
                                                             <div class="card-body">
                                                                 <div class="d-flex align-items-start mb-3">
                                                                     <div class="plugin-icon bg-primary bg-opacity-10 text-primary me-3">
-                                                                        <img src="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-content/plugins/<?php echo $mainFolder.'/'.$pluginFolder?>/assets/icon.png" loading="lazy" alt="Image Description" width="auto" height="auto">
+                                                                        <img src="<?php echo PP_URL; ?>/pp-content/plugins/<?php echo $mainFolder.'/'.$pluginFolder?>/assets/icon.png" loading="lazy" alt="Image Description" width="auto" height="auto">
                                                                     </div>
                                                                     <div class="flex-grow-1">
                                                                         <h5 class="mb-1"><?php echo htmlspecialchars($pluginInfo['Plugin Name'] ?? '')?></h5>
@@ -387,7 +387,7 @@
             $.ajax
             ({
                 type: "POST",
-                url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/plugin-manager",
+                url: "<?php echo PP_URL; ?>/admin/plugin-manager",
                 data: { "action": "pp_plugin_manager", "type": type, "mainfolder": mainfolder, "pluginfolder": pluginfolder},
                 success: function (data) {
                     console.log(data);

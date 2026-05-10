@@ -19,7 +19,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="https://<?php echo $_SERVER['HTTP_HOST']?>/pp-external/assets/style-login.css?v=1.4">
+    <link rel="stylesheet" href="<?php echo PP_URL; ?>/pp-external/assets/style-login.css?v=1.4">
 </head>
 <body>
     <div class="login-container">
@@ -74,7 +74,7 @@
                 $.ajax
                 ({
                     type: "POST",
-                    url: "https://<?php echo $_SERVER['HTTP_HOST']?>/admin/dashboard",
+                    url: "<?php echo PP_URL; ?>/admin/dashboard",
                     data: { "two-factor-authentication-action-login": "proceed", "auth_code": auth_code },
                     success: function (data) {
                         document.querySelector("#loginButton").innerHTML = '<span id="loginText">Log In</span>';
