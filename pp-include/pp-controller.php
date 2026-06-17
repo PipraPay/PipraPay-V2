@@ -17,14 +17,26 @@
     use Dompdf\Dompdf;
 
     function connectDatabase() {
-        global $db_host, $db_user, $db_pass, $db_name;
-    
-        $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-    
+        global $db_host, $db_user, $db_pass, $db_name, $db_ssl, $db_ca_path;
+
+        $conn = new mysqli();
+
+        if (isset($db_ssl) && $db_ssl === 'true') {
+            // Use CA path if provided and file exists, otherwise use default SSL settings
+            if (isset($db_ca_path) && !empty($db_ca_path) && file_exists($db_ca_path)) {
+                mysqli_ssl_set($conn, null, null, $db_ca_path, null, null);
+            } else {
+                mysqli_ssl_set($conn, null, null, null, null, null);
+            }
+            $conn->real_connect($db_host, $db_user, $db_pass, $db_name, null, null, MYSQLI_CLIENT_SSL);
+        } else {
+            $conn->real_connect($db_host, $db_user, $db_pass, $db_name);
+        }
+
         if ($conn->connect_error) {
             die('Connection failed: ' . $conn->connect_error);
         }
-    
+
         return $conn;
     }
     

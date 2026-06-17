@@ -56,7 +56,9 @@
         $dbPrefix = $_POST['dbPrefix'];
         $dbUser   = $_POST['dbUser'];
         $dbPass   = $_POST['dbPass'];
-    
+        $dbSSL    = isset($_POST['dbSSL']) ? 'true' : 'false';
+        $dbCAPath = isset($_POST['dbCAPath']) ? trim($_POST['dbCAPath']) : '';
+
         $adminName = $_POST['adminName'];
         $adminEmail = $_POST['adminEmail'];
         $adminUser = $_POST['adminUser'];
@@ -74,9 +76,28 @@
         }
     
         // Connect to DB
-        $conn = new mysqli($datahost, $dbUser, $dbPass, $dbName, $dataport);
+        $conn = new mysqli();
+
+        if ($dbSSL === 'true') {
+            // Use CA path if provided, otherwise use default SSL settings
+            if (!empty($dbCAPath) && file_exists($dbCAPath)) {
+                mysqli_ssl_set($conn, null, null, $dbCAPath, null, null);
+            } else {
+                mysqli_ssl_set($conn, null, null, null, null, null);
+            }
+            $conn->real_connect($datahost, $dbUser, $dbPass, $dbName, $dataport, null, MYSQLI_CLIENT_SSL);
+        } else {
+            $conn->real_connect($datahost, $dbUser, $dbPass, $dbName, $dataport);
+        }
+
         if ($conn->connect_error) {
-            echo json_encode(["status" => "false", "message" => "Error: Database connection failed."]);
+            $errorMessage = "Error: Database connection failed.";
+            if ($dbSSL === 'true' && strpos($conn->connect_error, 'insecure transport') !== false) {
+                $errorMessage .= " Try disabling SSL if your database doesn't require secure connections.";
+            } elseif ($dbSSL === 'false' && strpos($conn->connect_error, 'insecure transport') !== false) {
+                $errorMessage .= " This database requires SSL connections. Please enable the SSL option.";
+            }
+            echo json_encode(["status" => "false", "message" => $errorMessage]);
             exit();
         }
     
@@ -87,6 +108,8 @@
     \$db_pass = '$dbPass';
     \$db_name = '$dbName';
     \$db_prefix = '$dbPrefix';
+    \$db_ssl = '" . addslashes($dbSSL) . "';
+    \$db_ca_path = '" . addslashes($dbCAPath) . "';
     \$mode = 'live';
     \$password_reset = 'off';
 ?>";
@@ -177,13 +200,33 @@
         $dbPrefix = $_POST['dbPrefix'];
         $dbUser   = $_POST['dbUser'];
         $dbPass   = $_POST['dbPass'];
-        
-        $conn = @new mysqli($datahost, $dbUser, $dbPass, $dbName, $dataport);
-    
+        $dbSSL    = isset($_POST['dbSSL']) ? 'true' : 'false';
+        $dbCAPath = isset($_POST['dbCAPath']) ? trim($_POST['dbCAPath']) : '';
+
+        $conn = new mysqli();
+
+        if ($dbSSL === 'true') {
+            // Use CA path if provided, otherwise use default SSL settings
+            if (!empty($dbCAPath) && file_exists($dbCAPath)) {
+                mysqli_ssl_set($conn, null, null, $dbCAPath, null, null);
+            } else {
+                mysqli_ssl_set($conn, null, null, null, null, null);
+            }
+            $conn->real_connect($datahost, $dbUser, $dbPass, $dbName, $dataport, null, MYSQLI_CLIENT_SSL);
+        } else {
+            $conn->real_connect($datahost, $dbUser, $dbPass, $dbName, $dataport);
+        }
+
         if ($conn->connect_error) {
+            $errorMessage = "Connection failed: " . $conn->connect_error;
+            if ($dbSSL === 'true' && strpos($conn->connect_error, 'insecure transport') !== false) {
+                $errorMessage .= " Try disabling SSL if your database doesn't require secure connections.";
+            } elseif ($dbSSL === 'false' && strpos($conn->connect_error, 'insecure transport') !== false) {
+                $errorMessage .= " This database requires SSL connections. Please enable the SSL option.";
+            }
             echo json_encode([
                 "status" => "false",
-                "message" => "Connection failed: " . $conn->connect_error
+                "message" => $errorMessage
             ]);
         } else {
             echo json_encode([
@@ -380,6 +423,28 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dbSSL">
+                                <label class="form-check-label" for="dbSSL">
+                                    <strong>Enable SSL Connection</strong>
+                                    <div class="form-text">Required for TiDB Serverless and other secure database clusters</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3" id="caPathRow" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="dbCAPath" class="form-label">CA Certificate Path</label>
+                                <input type="text" class="form-control" id="dbCAPath" placeholder="/etc/ssl/cert.pem">
+                                <div class="form-text">Path to CA certificate file (e.g., /etc/ssl/cert.pem on macOS). Leave empty to use default certificates.</div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="btn btn-light" id="testBtn">
                         Test <i class="fa fa-refresh ms-2"></i>
@@ -517,6 +582,15 @@
 
     <script>
         $(document).ready(function () {
+            // Toggle CA path field when SSL checkbox changes
+            $('#dbSSL').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#caPathRow').show();
+                } else {
+                    $('#caPathRow').hide();
+                }
+            });
+
             $('#testBtn').click(function (e) { 
                 document.querySelector("#testBtn").innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:18px"></i>';
 
@@ -526,12 +600,14 @@
                 var dbPrefix =document.querySelector("#dbPrefix").value;
                 var dbUser =document.querySelector("#dbUser").value;
                 var dbPass =document.querySelector("#dbPass").value;
-                
+                var dbSSL = document.querySelector("#dbSSL").checked;
+                var dbCAPath = document.querySelector("#dbCAPath").value;
+
                 $.ajax
                 ({
                     type: "POST",
                     url: "https://<?php echo $_SERVER['HTTP_HOST']?>/install/",
-                    data: { "test": "test", "datahost": datahost, "dataport": dataport, "dbName": dbName, "dbPrefix": dbPrefix, "dbUser": dbUser, "dbPass": dbPass },
+                    data: { "test": "test", "datahost": datahost, "dataport": dataport, "dbName": dbName, "dbPrefix": dbPrefix, "dbUser": dbUser, "dbPass": dbPass, "dbSSL": dbSSL, "dbCAPath": dbCAPath },
                     success: function (data) {
                         document.querySelector("#testBtn").innerHTML = 'Test <i class="fa fa-refresh ms-2"></i>';
                         
@@ -697,7 +773,9 @@
                             var dbPrefix =document.querySelector("#dbPrefix").value;
                             var dbUser =document.querySelector("#dbUser").value;
                             var dbPass =document.querySelector("#dbPass").value;
-                                
+                            var dbSSL = document.querySelector("#dbSSL").checked;
+                            var dbCAPath = document.querySelector("#dbCAPath").value;
+
                             var adminName =document.querySelector("#adminName").value;
                             var adminEmail =document.querySelector("#adminEmail").value;
                             var adminUser =document.querySelector("#adminUser").value;
@@ -707,12 +785,12 @@
                                 document.querySelector(".admin-connection-response").innerHTML = '<div class="alert alert-danger"> <i class="fa fa-info-circle me-2"></i> Error: All administrator credentials are required to complete the installation.</div>';
                             }else{
                                 document.querySelector("#nextBtn").innerHTML = '<i class="fa fa-circle-o-notch fa-spin" style="font-size:18px"></i>';
-                                
+
                                 $.ajax
                                 ({
                                     type: "POST",
                                     url: "https://<?php echo $_SERVER['HTTP_HOST']?>/install/",
-                                    data: { "install": "start", "datahost": datahost, "dataport": dataport, "dbName": dbName, "dbPrefix": dbPrefix, "dbUser": dbUser, "dbPass": dbPass, "adminName": adminName, "adminEmail": adminEmail, "adminUser": adminUser, "adminPass": adminPass },
+                                    data: { "install": "start", "datahost": datahost, "dataport": dataport, "dbName": dbName, "dbPrefix": dbPrefix, "dbUser": dbUser, "dbPass": dbPass, "dbSSL": dbSSL, "dbCAPath": dbCAPath, "adminName": adminName, "adminEmail": adminEmail, "adminUser": adminUser, "adminPass": adminPass },
                                     success: function (data) {
                                         document.querySelector("#nextBtn").innerHTML = 'Next <i class="fa fa-arrow-right ms-2"></i>';
                                         
