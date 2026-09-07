@@ -52,8 +52,8 @@
         if($endpoint_type == "create-charge") {
             $received_api_key = getAuthorizationHeader();
         
-            if ($received_api_key !== $global_setting_response['response'][0]['api_key']) {
-                http_response_code(400); 
+            if (empty($received_api_key) || !hash_equals($global_setting_response['response'][0]['api_key'], $received_api_key)) {
+                http_response_code(401); 
                 echo json_encode(["status" => false, "message" => "Unauthorized request. Invalid API key."]);
                 exit;
             }
@@ -72,7 +72,7 @@
             }
         
             if (!empty($missing_fields)) {
-                http_response_code(400);
+                http_response_code(400); 
                 echo json_encode(["status" => false, "message" => "Missing required field(s): " . implode(', ', $missing_fields)]);
                 exit;
             }
@@ -80,7 +80,13 @@
             // Proceed if all fields are present
             $full_name = escape_string($data['full_name']);
             $email_mobile = escape_string($data['email_mobile']);
-            $amount = escape_string($data['amount']);
+            $amount = safeNumber($data['amount']);
+            if ($amount <= 0) {
+                http_response_code(400); 
+                echo json_encode(["status" => false, "message" => "Amount must be greater than zero."]);
+                exit;
+            }
+
             $meta_data = json_encode($data['metadata']);
             $redirect_url = escape_string($data['redirect_url']);
             $cancel_url = escape_string($data['cancel_url']);
@@ -93,7 +99,7 @@
             $product_description = isset($data['product_description']) ? escape_string($data['product_description']) : '--';
             $product_meta = isset($data['product_meta']) ? json_encode($data['product_meta']) : '--';
         
-            $pp_id = rand();
+            $pp_id = time() . mt_rand(10000, 99999);
         
             $columns = ['pp_id', 'c_id', 'c_name', 'c_email_mobile', 'transaction_amount', 'transaction_fee', 'transaction_refund_amount', 'transaction_currency', 'transaction_redirect_url', 'transaction_return_type', 'transaction_cancel_url', 'transaction_webhook_url', 'transaction_metadata', 'transaction_status', 'transaction_product_name', 'transaction_product_description', 'transaction_product_meta', 'created_at'];
             $values = [$pp_id, $c_id, $full_name, $email_mobile, safeNumber($amount), 0, 0, $currency, $redirect_url, $return_type, $cancel_url, $webhook_url, $meta_data, 'initialize', $product_name, $product_description, $product_meta, getCurrentDatetime('Y-m-d H:i:s')];
@@ -107,9 +113,9 @@
         if($endpoint_type == "verify-payments"){
             $received_api_key = getAuthorizationHeader();
             
-            if ($received_api_key !== $global_setting_response['response'][0]['api_key']) {
-                http_response_code(400); 
-                echo json_encode(["status" => false, "message" => "Unauthorized request. Invalid API key.".$received_api_key]);
+            if (empty($received_api_key) || !hash_equals($global_setting_response['response'][0]['api_key'], $received_api_key)) {
+                http_response_code(401); 
+                echo json_encode(["status" => false, "message" => "Unauthorized request. Invalid API key."]);
                 exit;
             }
             

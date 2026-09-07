@@ -80,7 +80,9 @@ if(isset($_POST['two-factor-authentication-action-login'])){
         $isValid = $ga->verifyCode($secret_key, $auth_code, 2);
         
         if ($isValid) {
-            setsCookie('pp_two_factor_authentication', "auth");
+            $admin_token = getCookie('pp_admin') ?? '';
+            $two_fa_hash = (!empty($secret_key) && !empty($admin_token)) ? hash_hmac('sha256', $admin_token, $secret_key) : '';
+            setsCookie('pp_two_factor_authentication', $two_fa_hash);
             
             echo json_encode(['status' => "true", 'target' => 'dashboard']);
         } else {
@@ -100,7 +102,12 @@ function two_factor_authentication_initialize() {
     $auth_status = $settings['auth_status'] ?? '';
     
     if($auth_status == "enable"){
-        if(checkCookie('pp_two_factor_authentication')){
+        $secret_key = $settings['secret_key'] ?? '';
+        $admin_token = getCookie('pp_admin') ?? '';
+        $cookie_2fa = getCookie('pp_two_factor_authentication') ?? '';
+        $expected_hash = (!empty($secret_key) && !empty($admin_token)) ? hash_hmac('sha256', $admin_token, $secret_key) : '';
+
+        if(!empty($cookie_2fa) && !empty($expected_hash) && hash_equals($expected_hash, $cookie_2fa)){
             
         }else{
            // setsCookie('pp_piprapay_vercel_themepaid', "paid");

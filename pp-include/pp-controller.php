@@ -296,12 +296,14 @@ function convertDateTime($datetime, $daysToSubtract = 0, $newHour = null, $newMi
     
     // Logout: clear all cookies and destroy session
     function logoutCookie() {
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+
         // Expire all cookies
         foreach ($_COOKIE as $name => $value) {
             setcookie($name, '', [
                 'expires' => time() - 3600,
                 'path' => '/',
-                'secure' => true,
+                'secure' => $isSecure,
                 'httponly' => true,
                 'samesite' => 'Lax'
             ]);

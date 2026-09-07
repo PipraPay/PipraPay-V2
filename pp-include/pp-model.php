@@ -21,6 +21,13 @@
     }
     
     if(isset($_GET['logout'])){
+        if(checkCookie('pp_admin')){
+            $raw_logout_cookie = getCookie('pp_admin');
+            if(!empty($raw_logout_cookie) && is_string($raw_logout_cookie) && preg_match('/^[a-zA-Z0-9]{1,128}$/', $raw_logout_cookie)){
+                $safe_logout_cookie = escape_string($raw_logout_cookie);
+                updateData($db_prefix.'browser_log', ['status'], ['inactive'], "cookie = '".$safe_logout_cookie."'");
+            }
+        }
         logoutCookie();
 ?>
         <script>
@@ -37,33 +44,26 @@
     $global_setting_response = json_decode(getData($db_prefix.'settings', 'WHERE id="1"'), true);
     $global_version = json_decode(file_get_contents(__DIR__.'/../version.json'), true);
     
+    $global_user_login = false;
+    $raw_admin_cookie = null;
+
     if(checkCookie('pp_admin')){
-        $global_cookie_response = json_decode(getData($db_prefix.'browser_log', 'WHERE cookie="'.getCookie('pp_admin').'" AND status="active"'), true);
-        if($global_cookie_response['status'] == true){
-            $global_user_response = json_decode(getData($db_prefix.'admins', 'WHERE id="'.$global_cookie_response['response'][0]['a_id'].'" AND a_status="active"'), true);
-            if($global_user_response['status'] == true){
-                $global_user_login = true;
-            }else{
-                $global_user_login = false;
-            }
-        }else{
-            $global_user_login = false;
-        }
-    }else{
-        if(isset($_POST['pp_admin_session'])){
-            $global_cookie_response = json_decode(getData($db_prefix.'browser_log', 'WHERE cookie="'.$_POST['pp_admin_session'].'" AND status="active"'), true);
-            if($global_cookie_response['status'] == true){
-                $global_user_response = json_decode(getData($db_prefix.'admins', 'WHERE id="'.$global_cookie_response['response'][0]['a_id'].'" AND a_status="active"'), true);
-                if($global_user_response['status'] == true){
+        $raw_admin_cookie = getCookie('pp_admin');
+    }else if(isset($_POST['pp_admin_session'])){
+        $raw_admin_cookie = $_POST['pp_admin_session'];
+    }
+
+    if(!empty($raw_admin_cookie) && is_string($raw_admin_cookie) && preg_match('/^[a-zA-Z0-9]{1,128}$/', $raw_admin_cookie)){
+        $safe_admin_cookie = escape_string($raw_admin_cookie);
+        $global_cookie_response = json_decode(getData($db_prefix.'browser_log', 'WHERE cookie="'.$safe_admin_cookie.'" AND status="active" LIMIT 1'), true);
+        if(!empty($global_cookie_response['status']) && !empty($global_cookie_response['response'][0]['a_id'])){
+            $admin_id = intval($global_cookie_response['response'][0]['a_id']);
+            if($admin_id > 0){
+                $global_user_response = json_decode(getData($db_prefix.'admins', 'WHERE id="'.$admin_id.'" AND a_status="active" LIMIT 1'), true);
+                if(!empty($global_user_response['status']) && !empty($global_user_response['response'][0])){
                     $global_user_login = true;
-                }else{
-                    $global_user_login = false;
                 }
-            }else{
-                $global_user_login = false;
             }
-        }else{
-           $global_user_login = false;
         }
     }
     
@@ -73,6 +73,12 @@
         if($action == ""){
             echo json_encode(['status' => "false", 'message' => 'Something Wrong!']);
         }else{
+            $public_actions = ['login', 'forgot-password', 'pp-invoice-payment-link', 'pp-invoice-link'];
+            if(!in_array($action, $public_actions, true) && $global_user_login !== true){
+                echo json_encode(['status' => "false", 'message' => 'Unauthorized access']);
+                exit();
+            }
+
             if($action == "pp_admin_info"){
                 echo json_encode(['status' => "true", 'full_name' => $global_user_response['response'][0]['name'], 'username' => $global_user_response['response'][0]['username'], 'email' => $global_user_response['response'][0]['email']]);
             }
@@ -94,7 +100,7 @@
         
                     if($response['status'] == true){
                         if (password_verify($password, $response['response'][0]['password'])) {
-                            $cookie = rand();
+                            $cookie = function_exists('random_bytes') ? bin2hex(random_bytes(32)) : bin2hex(openssl_random_pseudo_bytes(32));
                             $userInfo = getUserDeviceInfo();
                             
                             $columns = ['a_id', 'cookie', 'browser', 'device', 'ip', 'status', 'created_at'];
@@ -345,9 +351,9 @@
             
             
             if($action == "pp_transaction"){
-                $transaction_status = $_POST['transaction_status'];
-                $search = escape_string($_POST['search']);
-                $visibility = escape_string($_POST['visibility']);
+                $transaction_status = escape_string($_POST['transaction_status'] ?? 'all');
+                $search = escape_string($_POST['search'] ?? '');
+                $visibility = escape_string($_POST['visibility'] ?? '');
                 
                 if($transaction_status == "all"){
                     $sql_rn = 'transaction_status NOT IN ("initialize") AND c_name LIKE "%'.$search.'%" OR transaction_status NOT IN ("initialize") AND c_email_mobile LIKE "%'.$search.'%" OR transaction_status NOT IN ("initialize") AND payment_method LIKE "%'.$search.'%" OR transaction_status NOT IN ("initialize") AND transaction_product_name LIKE "%'.$search.'%"';
@@ -408,7 +414,7 @@
             
             
             if($action == "pp_view_transaction"){
-                $payment_id = $_POST['payment_id'];
+                $payment_id = intval($_POST['payment_id'] ?? 0);
                 
                 // Fetch the transaction
                 $response = json_decode(getData($db_prefix . 'transaction', 'WHERE id="' . $payment_id . '"'), true);
@@ -622,12 +628,18 @@
                 
                 // Parse plugin.json
                 $data = json_decode(file_get_contents($pluginJson), true);
-                $type = $data['type'] ?? null;       // plugin or theme
+                $type = $data['type'] ?? null;       // plugins or themes
                 $slug = $data['slug'] ?? null;
                 $mrdr = $data['mrdr'] ?? null;
                 
                 if (!$type || !$slug || !$mrdr) {
                     echo json_encode(["status" => "error", "message" => "plugin.json must include type, slug, and mrdr."]);
+                    exit;
+                }
+
+                $allowed_types = ['plugins', 'themes'];
+                if (!in_array($type, $allowed_types, true) || !preg_match('/^[a-zA-Z0-9_-]+$/', $mrdr) || !preg_match('/^[a-zA-Z0-9_-]+$/', $slug)) {
+                    echo json_encode(["status" => "error", "message" => "Invalid package metadata format."]);
                     exit;
                 }
                 
@@ -850,7 +862,7 @@
                     exit();
                 }
                 
-                $api_key = rand().uniqid().rand().rand().uniqid().rand();
+                $api_key = bin2hex(random_bytes(24));
 
                 if($global_user_login == true){
                     $columns = ['api_key'];
@@ -1373,7 +1385,7 @@
                 $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
                 $offset = ($page - 1) * $limit;
                 
-                $sms_status = $_POST['sms_status'];
+                $sms_status = escape_string($_POST['sms_status'] ?? 'all');
                 
                 if($sms_status == "all"){
                     $sms_status = "";
@@ -1489,7 +1501,7 @@
                     exit();
                 }
                 
-                $api_key = rand().uniqid().rand().rand().uniqid().rand();
+                $api_key = bin2hex(random_bytes(24));
 
                 if($global_user_login == true){
                     $columns = ['webhook'];
@@ -1622,7 +1634,7 @@
             }
             
             if ($action == "pp_view_payment_link") {
-                $pl_id = $_POST['pl_id'];
+                $pl_id = escape_string($_POST['pl_id'] ?? '');
                 
                 // Fetch the transaction
                 $response = json_decode(getData($db_prefix . 'payment_link', 'WHERE pl_id="' . $pl_id . '"'), true);
@@ -1693,14 +1705,14 @@
                     }
                     if($pl_id == ""){
                         $payment_link_create = true;
-                        $pl_id = rand();
+                        $pl_id = time() . mt_rand(10000, 99999);
                     }else{
                         $response_payment_link_checker = json_decode(getData($db_prefix.'payment_link','WHERE pl_id="'.$pl_id.'"'),true);
                         if($response_payment_link_checker['status'] == true){
                             $payment_link_create = false;
                         }else{
                             $payment_link_create = true;
-                            $pl_id = rand();
+                            $pl_id = time() . mt_rand(10000, 99999);
                         }
                     }
                     
@@ -1870,7 +1882,7 @@
             }
             
             if ($action == "pp_view_invoice") {
-                $invoice_id = $_POST['invoice_id'];
+                $invoice_id = intval($_POST['invoice_id'] ?? 0);
                 
                 // Fetch the transaction
                 $response = json_decode(getData($db_prefix . 'invoice', 'WHERE id="' . $invoice_id . '"'), true);
@@ -1977,14 +1989,14 @@
                     }
                     if($i_id == ""){
                         $invoice_create = true;
-                        $i_id = rand();
+                        $i_id = time() . mt_rand(10000, 99999);
                     }else{
                         $response_invoice_checker = json_decode(getData($db_prefix.'invoice','WHERE i_id="'.$i_id.'"'),true);
                         if($response_invoice_checker['status'] == true){
                             $invoice_create = false;
                         }else{
                             $invoice_create = true;
-                            $i_id = rand();
+                            $i_id = time() . mt_rand(10000, 99999);
                         }
                     }
                     
@@ -2124,9 +2136,9 @@
                     exit();
                 }
                 
-                $type = escape_string($_POST['type']);
-                $mainfolder = escape_string($_POST['mainfolder']);
-                $pluginfolder = escape_string($_POST['pluginfolder']);
+                $type = escape_string($_POST['type'] ?? '');
+                $mainfolder = basename($_POST['mainfolder'] ?? '');
+                $pluginfolder = basename($_POST['pluginfolder'] ?? '');
                 
                 if($type == "" || $mainfolder == "" || $pluginfolder == ""){
                     echo json_encode(['status' => "false", 'message' => 'Invalid data']);
@@ -2190,9 +2202,9 @@
                     exit();
                 }
                 
-                $type = escape_string($_POST['type']);
-                $mainfolder = escape_string($_POST['mainfolder']);
-                $themesfolder = escape_string($_POST['themesfolder']);
+                $type = escape_string($_POST['type'] ?? '');
+                $mainfolder = basename($_POST['mainfolder'] ?? '');
+                $themesfolder = basename($_POST['themesfolder'] ?? '');
                 
                 if($type == "" || $mainfolder == "" || $themesfolder == ""){
                     echo json_encode(['status' => "false", 'message' => 'Invalid data']);

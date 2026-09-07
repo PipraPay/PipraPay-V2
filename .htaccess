@@ -23,3 +23,14 @@ ErrorDocument 403 /error.php
 <FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
     Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
+
+# Deny direct access to sensitive files
+<FilesMatch "\.(sql|lock|log|env|git)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

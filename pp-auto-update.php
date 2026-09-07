@@ -21,17 +21,13 @@
                 exit();
             }
             
-            if(isset($_POST['mh-piprapay-auto-update'])){
-                
-            }else{
-                if($global_user_login == false){
+            if($global_user_login == false){
 ?>
-                    <script>
-                        location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/login";
-                    </script>
+                <script>
+                    location.href="https://<?php echo $_SERVER['HTTP_HOST']?>/admin/login";
+                </script>
 <?php
-                    exit();
-                }
+                exit();
             }
         }
     }else{
@@ -48,6 +44,11 @@
     }
     
     if (isset($_POST['auto-update'])) {
+        if ($global_user_login == false) {
+            echo json_encode(["status" => "false", "message" => "Unauthorized access"]);
+            exit();
+        }
+
         if ($mode == "demo") {
             echo json_encode(["status" => "false", "message" => "Error: Demo mode is active"]);
             exit();
